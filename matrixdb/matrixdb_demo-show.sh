@@ -44,9 +44,9 @@ func_exec_matrixdb_container(){
 
 func_host_os
 func_host_arch
-# func_pull_matrixdb_image
+func_pull_matrixdb_image
 func_check_matrixdb_image
-# func_run_matrixdb_container
+func_run_matrixdb_container
 func_check_matrixdb_container
 func_exec_matrixdb_container
 

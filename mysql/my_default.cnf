@@ -1,0 +1,23 @@
+[mysqld]
+port = 3306
+
+lower_case_table_names = 1
+
+basedir = /home/zgbvip/env/mysql-5.7.35
+datadir = /home/mysql/data/
+
+socket = /tmp/mysql.sock
+
+character-set-server=utf8
+
+log-error = /home/mysql/logs/mysqld.log
+pid-file = /home/mysql/data/mysqld.pid
+
+sql_mode=ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+#ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+
+max_connections=2000
+
+default_storage_engine=INNODB
+
+log_timestamps=SYSTEM

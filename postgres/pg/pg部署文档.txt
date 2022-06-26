@@ -1,0 +1,31 @@
+tar -zxf postgresql-9.6.24.tar.gz
+cd postgresql-9.6.24
+./configure
+make
+make install -j 4
+
+useradd postgres
+mkdir /usr/local/pgsql/data
+chown postgres:postgres /usr/local/pgsql/data
+
+vi ~/.bash_profile
+PATH=/usr/local/pgsql/bin:$PATH
+export PATH
+source ~/.bash_profile
+
+
+vim /etc/profile.d/my.sh
+
+# PG_HOME
+PG_HOME=/usr/local/pgsql
+export PATH=${PG_HOME}/bin:$PATH
+
+source /etc/profile.d/my.sh
+
+
+
+su - postgres
+/usr/local/pgsql/bin/initdb -D /usr/local/pgsql/data
+/usr/local/pgsql/bin/postgres -D /usr/local/pgsql/data >logfile 2>&1 &
+/usr/local/pgsql/bin/createdb test
+/usr/local/pgsql/bin/psql test

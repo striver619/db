@@ -1,0 +1,4 @@
+postgresql96-9.6.24-1PGDG.rhel7.x86_64.rpm
+postgresql96-contrib-9.6.24-1PGDG.rhel7.x86_64.rpm
+postgresql96-libs-9.6.24-1PGDG.rhel7.x86_64.rpm
+postgresql96-server-9.6.24-1PGDG.rhel7.x86_64.rpm

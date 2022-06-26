@@ -1,0 +1,107 @@
+配置相关信息
+1、创建数据库存放路径位置
+mkdir -p /data/pg/data #存放数据库的文件夹
+chown -R postgres:postgres /data/pg #为新创建的pg文件夹分配数据库服务的操作权限
+chown -R postgres:postgres /data/pg/data #为存放数据库的文件夹分配权限
+chmod 750 /data/pg/data
+
+
+
+2、配置/etc/profile文件
+vim /etc/profile
+在末尾添加如下的信息配置，保存退出：
+PGDATA=/data/pg/data
+PGHOST=127.0.0.1
+PGDATABASE=postgres
+PGUSER=postgres
+PGPORT=5432
+PATH=/usr/pgsql-9.6/bin:$PATH
+export PATH
+export PGDATA PGHOST PGDATABASE PGUSER PGPORT
+export TMOUT=1000
+
+
+改生效：source /etc/profile
+查看是否已添加成功：export
+
+
+3、初始数据库
+#切换到postgres用户
+su - postgres
+
+#初始化数据库
+initdb -D /data/pg/data
+
+#退出当前postgres用户
+exit
+
+
+
+4、配置远程可访问
+vim /data/pg/data/pg_hba.conf
+找到# IPv4 local connections: 在它的下面添加一行,保存退出
+host all all 0.0.0.0/0 md5
+
+
+vim /data/pg/data/postgresql.conf
+找到#listen_addresses = ‘localhost’
+将前面的#删掉，改成listen_addresses = ‘*’
+找到#port = 5432，将前面的#删掉
+
+
+vim /usr/lib/systemd/system/postgresql-9.6.service
+#配置节里面指定正确的PGDATA路径,保存退出
+Environment=PGDATA=/data/pg/data/
+
+
+重启postgresql-9.6服务，使配置文件重效
+service postgresql-9.6 restart
+
+设置开机启动处理
+systemctl enable postgresql-9.6
+
+重启postgresql数据库
+systemctl restart postgresql-9.6
+
+修改密码：
+su - postgres
+然后输入：psql
+接着输入：Alter user postgres with password ‘pg_CARS@2022’;
+退出数据库连接：\q
+再退出：exit
+
+
+
+防火墙与端口设置
+systemctl enable firewalld #开机启用防火墙
+systemctl start firewalld #开启防火墙
+firewall-cmd --add-service=postgresql --permanent #开放postgresql服务
+firewall-cmd --zone=public --add-port=5432/tcp --permanent #可以直接添加端口
+firewall-cmd --reload # 重载防火墙
+firewall-cmd --list-ports #查看占用端口
+
+
+执行SQL文件
+切换用户：su - postgres
+然后输入：psql
+接着输入： create database dataway owner postgres
+
+
+查看已有数据库（右斜杠加L的小写）：\l
+
+
+
+恢复表结构【迁移sql文件（dataway-2020-12-3）放在根目录】
+退出连接数据库：\q
+再退出：exit
+执行：pg_restore -d dataway -U postgres -C /dataway-2020-12-24
+
+
+查看恢复的表：
+退出：\q
+切换数据库：psql -h 192.168.16.200 -p 5432 dataway postgres
+输入密码：pg_CARS@2022
+查看数据库表：\dt
+
+
+

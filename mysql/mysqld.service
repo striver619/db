@@ -1,0 +1,41 @@
+# /usr/lib/systemd/system/mysqld.service
+
+[Unit]
+Description=MySQL Server
+Documentation=man:mysqld(5.7)
+
+After=network.target
+After=syslog.target
+Before=shutdown.target # 关机前操作
+
+[Install]
+WantedBy=multi-user.target
+Alias=mysqld.service
+
+[Service]
+User=mysql
+Group=mysql
+Type=forking
+
+PIDFile=/datafs/module/mysql-5.7.35/data/mysql.pid
+
+#Disable service start and stop timeout logic of systemd for mysqld service.
+TimeoutSec=0
+
+#Execute pre and post scripts as root
+PermissionsStartOnly=true
+
+#Start|Stop main service
+ExecStart=/etc/init.d/mysqld start
+ExecStop=/etc/init.d/mysqld stop
+
+#Sets open_files_limit
+LimitNOFILE = 5000
+Restart=on-failure
+RestartPreventExitStatus=1
+PrivateTmp=false
+
+# systemctl daemon-reload
+# systemctl start mysqld
+# systemctl status mysqld
+# systemctl enable mysqld

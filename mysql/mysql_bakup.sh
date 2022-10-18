@@ -3,6 +3,7 @@
 func_sql_bakup(){
     find /data/dbbackup -type f -mtime +15 -name "*.gz" -exec rm -rf {} \;
     mysqldump -uroot -p'jat$12345789' mdplatform |gzip > /data/dbbackup/mdplatform_$(date +%F_%H%M%S).sql.gz
+    # mysqldump -uroot -p'123456' escheduler t_escheduler_process_definition |gzip > /tmp/t_escheduler_process_definition.sql.gz
 }
 
 func_sql_bakup
@@ -18,6 +19,7 @@ func_sql_bakup
 
 #备份主机为192.168.1.10，端口为3306，root用户下的db1数据库的tb1表到db1tb1.sql中。
 # mysqldump -h 192.168.1.10 -P 3306 -uroot -p123456 db1 tb1 > db1tb1.sql
+# mysqldump -uroot -p'123456' escheduler t_escheduler_process_definition > t_escheduler_process_definition.sql
 
 #只备份主机为192.168.1.10，端口为3306，root用户下的db1数据库的表结构到db1.sql中。
 # mysqldump -h 192.168.1.10 -P 3306 -uroot -p123456 -d db1 > db1.sql
